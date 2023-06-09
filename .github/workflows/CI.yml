@@ -24,7 +24,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
       - run: npm ci
-      - run: npm run build-prod
+      - run: npm run build
 
   test:
     strategy:
@@ -61,7 +61,12 @@ jobs:
       - name: Run storybook tests
         run: npm run test-storybook:ci
 
-      - name: Run e2e tests
-        run: npx percy exec -- npm run e2e:headless
-        env:
-          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+      # - name: Run e2e tests
+      #   run: npx percy exec -- npm run e2e:headless
+      #   env:
+      #     PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env: 
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

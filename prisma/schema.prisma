@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Actor {
+  id                   Int         @id
+  name                 String
+  adult                Boolean
+  birthday             String?
+  deathday             String?
+  gender               Int?
+  known_for_department String
+  biography            String?
+  imdb_id              String?
+  homepage             String?
+  place_of_birth       String?
+  popularity           Float
+  profile_path         String?
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime   @updatedAt
+  Cast                 Cast[]
+  Challenge            Challenge[]
+  Images               Images[]
+}
+
+model Cast {
+  id        String   @id
+  movieId   Int
+  actorId   Int
+  character String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Actor     Actor    @relation(fields: [actorId], references: [id])
+  Movie     Movie    @relation(fields: [movieId], references: [id])
+
+  @@unique([movieId, actorId])
+}
+
+model Challenge {
+  id        String   @id
+  solved    Boolean  @default(false)
+  path      Json     @default("[]")
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  actorId   Int
+  userId    String?
+  Actor     Actor    @relation(fields: [actorId], references: [id])
+  User      User?    @relation(fields: [userId], references: [id])
+}
+
+model Images {
+  id        String   @id
+  actorId   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  Actor     Actor    @relation(fields: [actorId], references: [id])
+}
+
+model Movie {
+  id                Int      @id
+  adult             Boolean
+  backdrop_path     String
+  budget            Int?
+  homepage          String?
+  imdb_id           String?
+  original_language String
+  original_title    String
+  overview          String
+  popularity        Float
+  poster_path       String
+  release_date      String
+  revenue           Int?
+  runtime           Int?
+  status            String?
+  tagline           String?
+  title             String
+  year              Int?
+  rating            Int?
+  vote_average      Float
+  vote_count        Int
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  Cast              Cast[]
+}
+
+model User {
+  id        String      @id
+  name      String      @default("Anonymous")
+  email     String?     @unique
+  password  String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime
+  Challenge Challenge[]
+}

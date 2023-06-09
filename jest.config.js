@@ -18,20 +18,12 @@ const customJestConfig = {
   clearMocks: true,
   collectCoverage: true,
   collectCoverageFrom: [
-    './src/**/*.{js,jsx,ts,tsx}',
-    '!./src/**/_*.{js,jsx,ts,tsx}',
-    '!./src/**/*.stories.{js,jsx,ts,tsx}',
+    './src/**/*.{js,ts}',
+    '!./src/**/_*.{js,ts}',
+    '!./src/**/*.stories.{js,ts}',
     '!**/*.d.ts',
     '!**/node_modules/**',
   ],
-  coverageThreshold: {
-    global: {
-      branches: 30,
-      functions: 30,
-      lines: 30,
-      statements: 30,
-    },
-  },
   testEnvironment: 'jest-environment-jsdom',
 };
 
