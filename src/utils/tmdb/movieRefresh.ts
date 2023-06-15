@@ -1,11 +1,14 @@
 import type { Movie } from '@prisma/client';
 
 import { prismaClient } from '../prismaClient';
-import { tmdbClient } from './tmdbClient';
+import tmdbClient from '../tmdbClient';
+
 
 
 export const updateMovie = async (movie: Movie) => {
-  const tmdbMovie = await tmdbClient.movies.getMovie(movie.id.toString());
+  const tmdbMovie = await tmdbClient.movies.getById(movie.id.toString(), {include: {
+    credits: true,
+  }});
   if (!tmdbMovie) return;
   await prismaClient.movie.update({
     where: { id: movie.id },
@@ -26,7 +29,7 @@ export const updateMovie = async (movie: Movie) => {
   });
 
   await Promise.all(
-    tmdbMovie.credits.map(async (actorData) => {
+    tmdbMovie.credits.map(async (actorData: any) => {
       const actor = await prismaClient.actor.upsert({
         where: { id: actorData.id },
         create: {
